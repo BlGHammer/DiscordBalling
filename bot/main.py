@@ -4,21 +4,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-intents = discord.Intents.default()
-intents.message_content = True
+bot = discord.Bot()
 
-client = discord.Client(intents=intents)
-
-@client.event
+@bot.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    print(f"We have logged in as {bot.user}")
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+@bot.slash_command(guild_ids=[1071040249477730356])
+async def ping(ctx):
+    await ctx.respond("Pong!")
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
-client.run(os.getenv("SECRET"))
+bot.run(os.getenv("SECRET"))
