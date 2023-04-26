@@ -1,24 +1,26 @@
 import discord
 import os
+import asyncio
 from dotenv import load_dotenv
 from discord.ext import commands
 
-def main():
-    load_dotenv()
-    intents = discord.Intents.all()
-    bot = discord.Bot(intents=intents) # = commands.Bot(command_prexif="?")
-    
-    @bot.event
-    async def on_ready():
-        print(f"We have logged in as {bot.user}")
-
+async def load_extensions(bot):
     for cog in os.listdir('./cogs'):
         if cog.endswith(".py"):
             print(cog)
             print(f"cogs.{cog[:-3]}")
-            bot.load_extension(f"cogs.{cog[:-3]}")
+            await bot.load_extension(f"cogs.{cog[:-3]}")
 
-    bot.run(os.getenv("SECRET"))
+async def main(bot):
+    @bot.event
+    async def on_ready():
+        print(f"We have logged in as {bot.user}")
+
+    await load_extensions(bot)
 
 if __name__ == "__main__":
-    main()
+    load_dotenv()
+    intents = discord.Intents.all()
+    bot = commands.Bot(intents=intents, command_prefix="?")
+    asyncio.run(main(bot))
+    bot.run(os.getenv("SECRET"))

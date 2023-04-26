@@ -1,5 +1,23 @@
 import discord
 from discord.ext import commands
+import re
+
+
+async def get_int_list(input: str) -> list[int]:
+    return [int(s) for s in re.findall(r'\b\d+\b', input)]
+# CallId is [-1]
+# CallerUserId is [-2]
+# topic: "_____", Caller: <@___>, CallId: ___
+# Receive incoming calls, topic: "_____"
+
+async def get_topic_name(input: str) -> str | None:
+    startIndex = temp.find('\"')
+    if startIndex != -1: #i.e. if the first quote was found
+        endIndex = temp.find('\"', startIndex + 1)
+        if endIndex != -1: #i.e. both quotes were found
+            return input[startIndex+1:endIndex]
+# str.lower(channel.Topic[:22]) == "receive incoming calls"
+
 
 async def can_dm_user(user: discord.User) -> bool:
     ch = user.dm_channel
